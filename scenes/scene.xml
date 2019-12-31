@@ -8,23 +8,23 @@
     </perspective>
 
     <perspective id="game" near="0.1" far="250" angle="45">
-      <from x="13" y="40" z="0"/>
+      <from x="13" y="37" z="0"/>
       <to x="12" y="0" z="0"/>
     </perspective>
 
     <perspective id="pieces" near="0.1" far="250" angle="30">
-      <from x="1" y="15" z="0"/>
-      <to x="0" y="0" z="0"/>
+      <from x="-0.8" y="15" z="0"/>
+      <to x="-1" y="0" z="0"/>
     </perspective>
 
     <perspective id="player1" near="0.1" far="250" angle="45">
-      <from x="0" y="35" z="14.5"/>
-      <to x="0" y="0" z="13.5"/>
+      <from x="13" y="35" z="15"/>
+      <to x="13" y="0" z="14.5"/>
     </perspective>
 
     <perspective id="player2" near="0.1" far="250" angle="45">
-      <from x="0" y="35" z="-14.5"/>
-      <to x="0" y="0" z="-13.5"/>
+      <from x="13" y="35" z="-14.5"/>
+      <to x="13" y="0" z="-13.5"/>
     </perspective>
   </views>
 
@@ -42,13 +42,13 @@
       <attenuation constant="1" linear="0" quadratic="0"/>
     </omni>
 
-    <spot id="pieces" enabled="false" angle="0" exponent="4">
-      <location x="0" y="-0.1" z="2" w="1"/>
-      <target x="0" y="0.2" z="3.8"/>
-      <ambient r="0.3" g="0.2" b="0.2" a="1"/>
-      <diffuse r="1" g="0.4" b="0.4" a="0.4"/>
-      <specular r="1" g="0.4" b="0.4" a="0.4"/>
-      <attenuation constant="0" linear="0.1" quadratic="0"/>
+    <spot id="pieces" enabled="false" angle="0" exponent="1">
+      <location x="-4" y="0" z="0" w="1"/>
+      <target x="-4" y="0.2" z="0"/>
+      <ambient r="1" g="1" b="1" a="0.7"/>
+      <diffuse r="1" g="1" b="1" a="0.7"/>
+      <specular r="1" g="1" b="1" a="0.7"/>
+      <attenuation constant="0" linear="0.7" quadratic="0"/>
     </spot>
   </lights>
 
