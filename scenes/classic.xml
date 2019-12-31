@@ -1,0 +1,309 @@
+<lxs>
+  <scene root="demoRoot" axis_length="5"/>
+
+  <views default="scene">
+    <perspective id="scene" near="0.1" far="500" angle="45">
+      <from x="50" y="45" z="50"/>
+      <to x="15" y="15" z="15"/>
+    </perspective>
+
+    <perspective id="game" near="0.1" far="250" angle="45">
+      <from x="13" y="37" z="0"/>
+      <to x="12" y="0" z="0"/>
+    </perspective>
+
+    <perspective id="pieces" near="0.1" far="250" angle="30">
+      <from x="-0.8" y="15" z="0"/>
+      <to x="-1" y="0" z="0"/>
+    </perspective>
+
+    <perspective id="player1" near="0.1" far="250" angle="45">
+      <from x="13" y="35" z="15"/>
+      <to x="13" y="0" z="14.5"/>
+    </perspective>
+
+    <perspective id="player2" near="0.1" far="250" angle="45">
+      <from x="13" y="35" z="-14.5"/>
+      <to x="13" y="0" z="-13.5"/>
+    </perspective>
+  </views>
+
+  <globals>
+    <ambient r="0.05" g="0.05" b="0.05" a="1.0"/>
+    <background r="0.0" g="0.0" b="0.0" a="1.0"/>
+  </globals>
+
+  <lights>
+    <omni id="game" enabled="true">
+      <location x="0" y="0" z="12" w="1.0"/>
+      <ambient r="1.0" g="1.0" b="1.0" a="1"/>
+      <diffuse r="1.0" g="1.0" b="1.0" a="1"/>
+      <specular r="1.0" g="1.0" b="1.0" a="1"/>
+      <attenuation constant="1" linear="0" quadratic="0"/>
+    </omni>
+
+    <spot id="pieces" enabled="false" angle="0" exponent="1">
+      <location x="-4" y="0" z="0" w="1"/>
+      <target x="-4" y="0.2" z="0"/>
+      <ambient r="1" g="1" b="1" a="0.7"/>
+      <diffuse r="1" g="1" b="1" a="0.7"/>
+      <specular r="1" g="1" b="1" a="0.7"/>
+      <attenuation constant="0" linear="0.7" quadratic="0"/>
+    </spot>
+  </lights>
+
+  <textures>
+    <texture id="tray" file="scenes/images/tableTop.png"/>
+    <texture id="sun" file="scenes/images/SUN.png"/>
+    <texture id="table" file="scenes/images/wood.png"/>
+    <texture id="floor" file="scenes/images/grass.png"/>
+    <texture id="exoLGG" file="scenes/images/exoLGG.png"/>
+    <texture id="exoLGR" file="scenes/images/exoLGR.png"/>
+    <texture id="exoLGT" file="scenes/images/exoLGT.png"/>
+    <texture id="exoLRG" file="scenes/images/exoLRG.png"/>
+    <texture id="exoLRR" file="scenes/images/exoLRR.png"/>
+    <texture id="exoLRT" file="scenes/images/exoLRT.png"/>
+    <texture id="exoLWG" file="scenes/images/exoLWG.png"/>
+    <texture id="exoLWR" file="scenes/images/exoLWR.png"/>
+    <texture id="exoLWT" file="scenes/images/exoLWT.png"/>
+    <texture id="exoMGG" file="scenes/images/exoMGG.png"/>
+    <texture id="exoMGR" file="scenes/images/exoMGR.png"/>
+    <texture id="exoMGT" file="scenes/images/exoMGT.png"/>
+    <texture id="exoMRG" file="scenes/images/exoMRG.png"/>
+    <texture id="exoMRR" file="scenes/images/exoMRR.png"/>
+    <texture id="exoMRT" file="scenes/images/exoMRT.png"/>
+    <texture id="exoMWG" file="scenes/images/exoMWG.png"/>
+    <texture id="exoMWR" file="scenes/images/exoMWR.png"/>
+    <texture id="exoMWT" file="scenes/images/exoMWT.png"/>
+    <texture id="exoSGG" file="scenes/images/exoSGG.png"/>
+    <texture id="exoSGR" file="scenes/images/exoSGR.png"/>
+    <texture id="exoSGT" file="scenes/images/exoSGT.png"/>
+    <texture id="exoSRG" file="scenes/images/exoSRG.png"/>
+    <texture id="exoSRR" file="scenes/images/exoSRR.png"/>
+    <texture id="exoSRT" file="scenes/images/exoSRT.png"/>
+    <texture id="exoSWG" file="scenes/images/exoSWG.png"/>
+    <texture id="exoSWR" file="scenes/images/exoSWR.png"/>
+    <texture id="exoSWT" file="scenes/images/exoSWT.png"/>
+  </textures>
+
+  <materials>
+    <material id="demoMaterial" shininess="10">
+      <emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+      <ambient r="0.75" g="0.75" b="0.75" a="1.0"/>
+      <diffuse r="0.75" g="0.75" b="0.75" a="1.0"/>
+      <specular r="0.75" g="0.75" b="0.75" a="1.0"/>
+    </material>
+
+    <material id="board" shininess="10">
+      <emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+      <ambient r="0.9" g="0.9" b="0.9" a="1.0"/>
+      <diffuse r="0.9" g="0.9" b="0.9" a="1.0"/>
+      <specular r="0.9" g="0.9" b="0.9" a="1.0"/>
+    </material>
+  </materials>
+
+  <transformations>
+    <transformation id="plate_pos">
+      <translate x="0" y="0.2" z="3.8"/>
+      <scale x="1.5" y="1.5" z="1.5"/>
+      <rotate axis="x" angle="-90"/>
+    </transformation>
+  </transformations>
+
+  <animations>
+
+  </animations>
+
+  <primitives>
+    <primitive id="plane">
+      <plane npartsU="2" npartsV="2"/>
+    </primitive>
+    <primitive id="leg">
+      <cylinder2 slices="20" stacks="5" height="8" base="0.25" top="0.25"/>
+    </primitive>
+  </primitives>
+
+  <components>
+    <component id="demoRoot">
+      <transformation>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="none"/>
+      <children>
+        <componentref id="game_board" />
+        <componentref id="floor" />
+        <componentref id="table" />
+      </children>
+    </component>
+
+    <component id="game_board">
+      <transformation>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="none"/>
+      <children>
+        <componentref id="board" />
+        <componentref id="sun_pieces" />
+      </children>
+    </component>
+
+    <component id="board">
+      <transformation>
+        <translate x="12" y="0" z="1"/>
+        <scale x="30" y="13" z="56"/>
+      </transformation>
+      <materials>
+        <material id="board"/>
+      </materials>
+      <texture id="none"/>
+      <children>
+        <primitiveref id="plane" />
+      </children>
+    </component>
+
+    <component id="sun_pieces">
+      <transformation>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="sun" length_s="2" length_t="2"/>
+      <children>
+        <componentref id="sun1" />
+        <componentref id="sun2" />
+      </children>
+    </component>
+
+    <component id="sun1">
+      <transformation>
+        <translate x="13" y="0.2" z="-13"/>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="inherit"/>
+      <children>
+        <primitiveref id="plane" />
+      </children>
+    </component>
+
+    <component id="sun2">
+      <transformation>
+        <translate x="13" y="0.2" z="15"/>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="inherit"/>
+      <children>
+        <primitiveref id="plane" />
+      </children>
+    </component>
+
+    <component id="floor">
+      <transformation>
+        <translate x="0" y="-25" z="0"/>
+        <scale x="250" y="1" z="250"/>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="floor" length_s="2" length_t="2"/>
+      <children>
+        <primitiveref id="plane" />
+      </children>
+    </component>
+
+    <component id="table">
+      <transformation>
+        <translate x="13" y="-0.1" z="1"/>
+        <scale x="57.2" y="30.25" z="57.2"/>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="table" length_s="2" length_t="2"/>
+      <children>
+        <primitiveref id="plane" />
+        <componentref id="table_legs" />
+      </children>
+    </component>
+
+    <component id="table_legs">
+      <transformation>
+        <scale x="0.1" y="0.1" z="0.1"/>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="table" length_s="1" length_t="1"/>
+      <children>
+        <componentref id="leg1" />
+        <componentref id="leg2" />
+        <componentref id="leg3" />
+        <componentref id="leg4" />
+      </children>
+    </component>
+
+    <component id="leg1">
+      <transformation>
+        <translate x="4.5" y="-8" z="4"/>
+        <rotate axis="x" angle="-90"/>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="inherit" />
+      <children>
+        <primitiveref id="leg" />
+      </children>
+    </component>
+
+    <component id="leg2">
+      <transformation>
+        <translate x="-4.5" y="-8" z="4"/>
+        <rotate axis="x" angle="-90"/>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="inherit" />
+      <children>
+        <primitiveref id="leg" />
+      </children>
+    </component>
+
+    <component id="leg3">
+      <transformation>
+        <translate x="4.5" y="-8" z="-4"/>
+        <rotate axis="x" angle="-90"/>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="inherit" />
+      <children>
+        <primitiveref id="leg" />
+      </children>
+    </component>
+
+    <component id="leg4">
+      <transformation>
+        <translate x="-4.5" y="-8" z="-4"/>
+        <rotate axis="x" angle="-90"/>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="inherit" />
+      <children>
+        <primitiveref id="leg" />
+      </children>
+    </component>
+
+  </components>
+</lxs>

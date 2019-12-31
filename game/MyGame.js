@@ -14,9 +14,9 @@ class MyGame extends CGFobject {
         this.planets = [];
         this.player1turn = true;
         this.player2turn = false;
-
         this.currPiece = null;
         this.currTile = null;
+        this.lastPlays = [];
 
         for (var planet = 0; planet < 27; planet++) {
             var id = planet + 1486;
@@ -24,6 +24,25 @@ class MyGame extends CGFobject {
             var obj = new MyPlanet(this.scene, id, false, initial, null, null);
 
             this.planets.push(obj);
+        }
+    }
+
+    undoLastPlay() {
+        if (this.lastPlays.length != 0) {
+            var lastPlay = this.lastPlays.pop();
+
+            lastPlay.animation = null;
+            lastPlay.final = null;
+            lastPlay.played = false;
+
+            if (this.player1turn) {
+                this.player2turn = true;
+                this.player1turn = false;
+            }
+            else {
+                this.player2turn = false;
+                this.player1turn = true;
+            }
         }
     }
 
@@ -89,13 +108,13 @@ class MyGame extends CGFobject {
                                 console.log("Escolheu a peça com o id " + this.piece.id);
                             }
                             else {
-                                if ((customId >= 1 & customId<=756) & this.player1turn) {
+                                if ((customId >= 1 & customId <= 756) & this.player1turn) {
                                     this.tile = obj;
                                     this.player1turn = false;
                                     this.player2turn = true;
                                     console.log("Escolheu o local com o id " + this.tile.id);
                                 }
-                                else if ((customId >= 784 & customId<=1485) & this.player2turn) {
+                                else if ((customId >= 784 & customId <= 1485) & this.player2turn) {
                                     this.tile = obj;
                                     this.player1turn = true;
                                     this.player2turn = false;
@@ -105,7 +124,7 @@ class MyGame extends CGFobject {
                                     this.piece = null;
                                     console.log("Wrong player!");
                                 }
-                                
+
                             }
                         }
 
@@ -134,8 +153,9 @@ class MyGame extends CGFobject {
 
                             this.piece.played = true;
 
-                            if(this.player2turn)
-                                console.log(this.piece.final[0] + ", " + this.piece.final[2]);
+                            this.lastPlays.push(this.piece);
+
+                            console.log(this.lastPlays);
 
                             this.piece = null;
                             this.tile = null;

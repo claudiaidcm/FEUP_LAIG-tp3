@@ -173,6 +173,9 @@ class XMLscene extends CGFscene {
 
         this.sceneInited = true;
         this.setPickEnabled(true);
+
+        this.currentScene = this.graph.filename.slice(0, -4);
+        this.interface.addGameSettings();
     }
 
     /**
@@ -228,4 +231,9 @@ class XMLscene extends CGFscene {
         this.popMatrix();
         // ---- END Background, camera and axis setup
     }
+
+    changeTheme(filename) {
+        this.graph.changeTheme = true;
+        this.graph.reader.open('scenes/' + filename + '.xml', this.graph);
+      }
 }

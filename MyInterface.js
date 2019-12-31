@@ -20,11 +20,14 @@ class MyInterface extends CGFinterface {
 
         this.gui = new dat.GUI();
 
+        this.aspect = this.gui.addFolder('Aspect');
+        this.game = this.gui.addFolder('Game');
+
         //Show or not axis control
-        this.gui.add(this.scene, 'displayAxis').name('Display Axis');
+        this.aspect.add(this.scene, 'displayAxis').name('Display Axis');
 
         //Scale factor
-        this.gui.add(this.scene, 'scaleFactor', 0.1, 5).name('Scale Factor');
+        this.aspect.add(this.scene, 'scaleFactor', 0.1, 5).name('Scale Factor');
 
         this.initKeys();
 
@@ -33,7 +36,7 @@ class MyInterface extends CGFinterface {
 
     //add lights to user interface
     addLights(lights) {
-        var interLight = this.gui.addFolder("Lights");
+        var interLight = this.aspect.addFolder("Lights");
 
         //lightsInfo -> array in which each position identifier is the light ID 
         //  and it's value is true or false (light enabled or disabled)
@@ -46,9 +49,16 @@ class MyInterface extends CGFinterface {
 
     //add cameras to user interface
     addCameras() {
-        this.gui.add(this.scene, 'cameraId', this.scene.viewIds).onChange(
+        this.aspect.add(this.scene, 'cameraId', this.scene.viewIds).onChange(
             this.scene.updateCamera.bind(this.scene)).name('Camera');
 
+    }
+
+    addGameSettings() {
+        this.game.add(this.scene, 'currentScene', ["classic", "galaxy"]).onChange(
+            this.scene.changeTheme.bind(this.scene)).name('Theme');
+
+        this.game.add(this.scene.graph.game, 'undoLastPlay').name("Undo last play");
     }
 
     /**

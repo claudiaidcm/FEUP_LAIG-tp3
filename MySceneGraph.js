@@ -21,7 +21,8 @@ class MySceneGraph {
    */
   constructor(filename, scene) {
     this.loadedOk = null;
-    this.startTime = Date.now();
+
+    this.filename = filename;
 
     // Establish bidirectional references between scene and graph.
     this.scene = scene;
@@ -65,7 +66,12 @@ class MySceneGraph {
     this.loadedOk = true;
 
     // As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
-    this.scene.onGraphLoaded();
+    //this.scene.onGraphLoaded();
+
+        // As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
+        if (!this.changeTheme)
+        this.scene.onGraphLoaded();
+  
   }
 
   /**
@@ -541,7 +547,7 @@ class MySceneGraph {
     if (this.numTextures == 0)
       return "at least one texture must be defined";
 
-    
+
     this.shuffle(this.piece_textures);
 
     /*******************************************************/
@@ -1398,9 +1404,9 @@ class MySceneGraph {
     console.log("   " + message);
   }
 
-    /**
-   * Shuffles the pieces' array so that all games have pieces available in different order
-   */
+  /**
+ * Shuffles the pieces' array so that all games have pieces available in different order
+ */
   shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * i)
@@ -1415,90 +1421,90 @@ class MySceneGraph {
    */
   displayScene() {
     this.processNode(this.idRoot, this.nodes[this.idRoot].materials[0], this.nodes[this.idRoot].texture, this.nodes[this.idRoot].length_s, this.nodes[this.idRoot].length_t);
-    
+
     /*******************************************************/
     this.game.display();
     /*******************************************************/
-  
+
   }
 
   processNode(nodeID, materialP, textureP, length_sP, length_tP) {
-      this.scene.pushMatrix();
-      var component = this.nodes[nodeID];
+    this.scene.pushMatrix();
+    var component = this.nodes[nodeID];
 
-      //TRANSFORMATION
-      //apply component's transformation
-      this.scene.multMatrix(component.transformation);
-      //===================
+    //TRANSFORMATION
+    //apply component's transformation
+    this.scene.multMatrix(component.transformation);
+    //===================
 
-      // ANIMATION
-      if (component.animation != null) {
-        this.animations[component.animation].apply();
-      }
-      //===================
+    // ANIMATION
+    if (component.animation != null) {
+      this.animations[component.animation].apply();
+    }
+    //===================
 
-      //MATERIALS
-      var material;
-      var arrayMat = [];
-      var numMaterial = this.scene.numMaterial;
-      var count = 0;
+    //MATERIALS
+    var material;
+    var arrayMat = [];
+    var numMaterial = this.scene.numMaterial;
+    var count = 0;
 
-      //array to save component's materials
-      for (var key in component.materials) {
-        arrayMat[count] = component.materials[key];
-        count++;
-      }
+    //array to save component's materials
+    for (var key in component.materials) {
+      arrayMat[count] = component.materials[key];
+      count++;
+    }
 
-      //process component's material
-      if (arrayMat[numMaterial % count] == "inherit")
-        material = materialP;
-      else
-        material = this.materials[arrayMat[numMaterial % count]];
-      //===================
+    //process component's material
+    if (arrayMat[numMaterial % count] == "inherit")
+      material = materialP;
+    else
+      material = this.materials[arrayMat[numMaterial % count]];
+    //===================
 
-      //TEXTURES
-      var texture;
-      var length_s;
-      var length_t;
+    //TEXTURES
+    var texture;
+    var length_s;
+    var length_t;
 
-      //process component's texture
-      if (component.texture == "inherit") {
-        length_s = length_sP;
-        length_t = length_tP;
-        texture = textureP;
-      } else if (component.texture == "none")
-        texture = "none";
-      else {
-        texture = component.texture;
-        length_s = component.length_s;
-        length_t = component.length_t;
-      }
+    //process component's texture
+    if (component.texture == "inherit") {
+      length_s = length_sP;
+      length_t = length_tP;
+      texture = textureP;
+    } else if (component.texture == "none")
+      texture = "none";
+    else {
+      texture = component.texture;
+      length_s = component.length_s;
+      length_t = component.length_t;
+    }
 
-      //set component's texture
-      if (texture != "none")
-        material.setTexture(this.textures[texture]);
-      else
-        material.setTexture(null);
+    //set component's texture
+    if (texture != "none")
+      material.setTexture(this.textures[texture]);
+    else
+      material.setTexture(null);
 
-      //apply component's material
-      material.apply();
-      //===================      
+    //apply component's material
+    material.apply();
+    //===================      
 
-      //CHILDREN
-      //process component's children that are other components
-      for (var i = 0; i < component.children.length; i++) {
-        this.processNode(component.children[i], material, texture, length_s, length_t);
-      }
+    //CHILDREN
+    //process component's children that are other components
+    for (var i = 0; i < component.children.length; i++) {
+      this.processNode(component.children[i], material, texture, length_s, length_t);
+    }
 
-      //display component's children that are primitives
-      for (var j = 0; j < component.primitives.length; j++) {
-        if ((this.primitives[component.primitives[j]] instanceof MyRectangle) || (this.primitives[component.primitives[j]] instanceof MyTriangle)) {
-          this.primitives[component.primitives[j]].updateTexLength(length_s, length_t);
-        }
-
-        this.primitives[component.primitives[j]].display();
+    //display component's children that are primitives
+    for (var j = 0; j < component.primitives.length; j++) {
+      if ((this.primitives[component.primitives[j]] instanceof MyRectangle) || (this.primitives[component.primitives[j]] instanceof MyTriangle)) {
+        this.primitives[component.primitives[j]].updateTexLength(length_s, length_t);
       }
 
-      this.scene.popMatrix();
+      this.primitives[component.primitives[j]].display();
+    }
+
+    this.scene.popMatrix();
   }
 }

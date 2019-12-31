@@ -3,7 +3,7 @@
 
   <views default="scene">
     <perspective id="scene" near="0.1" far="500" angle="45">
-      <from x="50" y="45" z="50"/>
+      <from x="50" y="45" z="60"/>
       <to x="15" y="15" z="15"/>
     </perspective>
 
@@ -53,10 +53,8 @@
   </lights>
 
   <textures>
-    <texture id="tray" file="scenes/images/tableTop.png"/>
     <texture id="sun" file="scenes/images/SUN.png"/>
-    <texture id="table" file="scenes/images/wood.png"/>
-    <texture id="floor" file="scenes/images/grass.png"/>
+    <texture id="galaxy" file="scenes/images/galaxy.png"/>
     <texture id="exoLGG" file="scenes/images/exoLGG.png"/>
     <texture id="exoLGR" file="scenes/images/exoLGR.png"/>
     <texture id="exoLGT" file="scenes/images/exoLGT.png"/>
@@ -93,6 +91,13 @@
       <diffuse r="0.75" g="0.75" b="0.75" a="1.0"/>
       <specular r="0.75" g="0.75" b="0.75" a="1.0"/>
     </material>
+
+    <material id="board" shininess="10">
+      <emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+      <ambient r="0.9" g="0.9" b="0.9" a="1.0"/>
+      <diffuse r="0.9" g="0.9" b="0.9" a="1.0"/>
+      <specular r="0.9" g="0.9" b="0.9" a="1.0"/>
+    </material>
   </materials>
 
   <transformations>
@@ -125,9 +130,37 @@
       </materials>
       <texture id="none"/>
       <children>
-        <componentref id="sun_pieces" />
+        <componentref id="game_board" />
         <componentref id="floor" />
-        <componentref id="table" />
+        <componentref id="wall1" />
+        <componentref id="wall2" />
+      </children>
+    </component>
+
+    <component id="game_board">
+      <transformation>
+      </transformation>
+      <materials>
+        <material id="demoMaterial"/>
+      </materials>
+      <texture id="none"/>
+      <children>
+        <componentref id="board" />
+        <componentref id="sun_pieces" />
+      </children>
+    </component>
+
+    <component id="board">
+      <transformation>
+        <translate x="12" y="0" z="1"/>
+        <scale x="30" y="13" z="56"/>
+      </transformation>
+      <materials>
+        <material id="board"/>
+      </materials>
+      <texture id="none"/>
+      <children>
+        <primitiveref id="plane" />
       </children>
     </component>
 
@@ -146,7 +179,7 @@
 
     <component id="sun1">
       <transformation>
-        <translate x="13" y="0.1" z="-13"/>
+        <translate x="13" y="0.2" z="-13"/>
       </transformation>
       <materials>
         <material id="demoMaterial"/>
@@ -159,7 +192,7 @@
 
     <component id="sun2">
       <transformation>
-        <translate x="13" y="0.1" z="15"/>
+        <translate x="13" y="0.2" z="15"/>
       </transformation>
       <materials>
         <material id="demoMaterial"/>
@@ -173,103 +206,45 @@
     <component id="floor">
       <transformation>
         <translate x="0" y="-25" z="0"/>
-        <scale x="250" y="1" z="250"/>
+        <scale x="250" y="250" z="250"/>
       </transformation>
       <materials>
         <material id="demoMaterial"/>
       </materials>
-      <texture id="floor" length_s="2" length_t="2"/>
+      <texture id="galaxy" length_s="2" length_t="2"/>
       <children>
         <primitiveref id="plane" />
       </children>
     </component>
 
-    <component id="table">
+    <component id="wall1">
       <transformation>
-        <translate x="13" y="0" z="1"/>
-        <scale x="57.2" y="30.25" z="57.2"/>
+        <translate x="25" y="-25" z="-100"/>
+        <scale x="250" y="250" z="250"/>
+        <rotate axis="x" angle="90"/>
       </transformation>
       <materials>
         <material id="demoMaterial"/>
       </materials>
-      <texture id="table" length_s="2" length_t="2"/>
+      <texture id="galaxy" length_s="2" length_t="2"/>
       <children>
         <primitiveref id="plane" />
-        <componentref id="table_legs" />
       </children>
     </component>
 
-    <component id="table_legs">
+    <component id="wall2">
       <transformation>
-        <scale x="0.1" y="0.1" z="0.1"/>
+        <translate x="-100" y="-25" z="0"/>
+        <scale x="250" y="250" z="250"/>
+        <rotate axis="z" angle="-90"/>
       </transformation>
       <materials>
         <material id="demoMaterial"/>
       </materials>
-      <texture id="table" length_s="1" length_t="1"/>
+      <texture id="galaxy" length_s="2" length_t="2"/>
       <children>
-        <componentref id="leg1" />
-        <componentref id="leg2" />
-        <componentref id="leg3" />
-        <componentref id="leg4" />
+        <primitiveref id="plane" />
       </children>
     </component>
-
-    <component id="leg1">
-      <transformation>
-        <translate x="4.5" y="-8" z="4"/>
-        <rotate axis="x" angle="-90"/>
-      </transformation>
-      <materials>
-        <material id="demoMaterial"/>
-      </materials>
-      <texture id="inherit" />
-      <children>
-        <primitiveref id="leg" />
-      </children>
-    </component>
-
-    <component id="leg2">
-      <transformation>
-        <translate x="-4.5" y="-8" z="4"/>
-        <rotate axis="x" angle="-90"/>
-      </transformation>
-      <materials>
-        <material id="demoMaterial"/>
-      </materials>
-      <texture id="inherit" />
-      <children>
-        <primitiveref id="leg" />
-      </children>
-    </component>
-
-    <component id="leg3">
-      <transformation>
-        <translate x="4.5" y="-8" z="-4"/>
-        <rotate axis="x" angle="-90"/>
-      </transformation>
-      <materials>
-        <material id="demoMaterial"/>
-      </materials>
-      <texture id="inherit" />
-      <children>
-        <primitiveref id="leg" />
-      </children>
-    </component>
-
-    <component id="leg4">
-      <transformation>
-        <translate x="-4.5" y="-8" z="-4"/>
-        <rotate axis="x" angle="-90"/>
-      </transformation>
-      <materials>
-        <material id="demoMaterial"/>
-      </materials>
-      <texture id="inherit" />
-      <children>
-        <primitiveref id="leg" />
-      </children>
-    </component>
-
   </components>
 </lxs>
