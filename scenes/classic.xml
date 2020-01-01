@@ -53,7 +53,6 @@
   </lights>
 
   <textures>
-    <texture id="tray" file="scenes/images/tableTop.png"/>
     <texture id="sun" file="scenes/images/SUN.png"/>
     <texture id="table" file="scenes/images/wood.png"/>
     <texture id="floor" file="scenes/images/grass.png"/>
