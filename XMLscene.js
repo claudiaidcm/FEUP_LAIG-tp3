@@ -24,6 +24,8 @@ class XMLscene extends CGFscene {
         this.lastTime = -1;
         this.deltaTime;
         this.firstTime = 0;
+
+        this.animation = null;
     }
 
     /**
@@ -81,8 +83,7 @@ class XMLscene extends CGFscene {
     }
 
     updateCamera() {
-        this.camera = this.cameras[this.cameraId];
-        this.interface.setActiveCamera(this.camera);
+        this.animation = new CameraAnimation(this, this.camera, this.cameras[this.cameraId], (this.deltaTime/1000) + 3);
     }
 
     /**
@@ -145,6 +146,9 @@ class XMLscene extends CGFscene {
                 if (this.graph.game.planets[j].animation != null)
                     this.graph.game.planets[j].animation.update(this.deltaTime);
         }
+
+        if (this.animation != null)
+            this.animation.apply(this.deltaTime);
 
         this.lastTime = currentTime;
     }
@@ -235,5 +239,5 @@ class XMLscene extends CGFscene {
     changeTheme(filename) {
         this.graph.changeTheme = true;
         this.graph.reader.open('scenes/' + filename + '.xml', this.graph);
-      }
+    }
 }

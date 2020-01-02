@@ -3,7 +3,7 @@
 
   <views default="scene">
     <perspective id="scene" near="0.1" far="500" angle="45">
-      <from x="50" y="45" z="60"/>
+      <from x="50" y="45" z="50"/>
       <to x="15" y="15" z="15"/>
     </perspective>
 
