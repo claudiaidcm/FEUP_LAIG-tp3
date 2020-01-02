@@ -2,7 +2,6 @@
 * CameraAnimation class, which represents a KeyFrame Animation
 * @constructor
 * @param {XMLScene} scene - reference to MyScene object
-* @param {string}   id         Animation Id
 */
 
 class CameraRotation {
@@ -13,19 +12,17 @@ class CameraRotation {
         this.nextCamera = nextCamera;
 
         this.rotTime = (this.scene.deltaTime/1000) + 1;
-
-        console.log(this.currCamera);
     }
 
-    apply(deltaTime) {
+    apply() {
 
-        if (this.rotTime < (deltaTime / 1000)) {
+        if (this.rotTime < (this.scene.deltaTime/1000)) {
             this.scene.camera = this.nextCamera;
             this.scene.interface.setActiveCamera(this.camera);
             return;
         }
 
-        var percentageTime = (this.rotTime - (deltaTime / 1000)) / this.rotTime;
+        var percentageTime = (this.rotTime - (this.scene.deltaTime/1000)) / this.rotTime;
 
         var near = this.form(this.nextCamera.near, this.currCamera.near, percentageTime);
         var far = this.form(this.nextCamera.far, this.currCamera.far, percentageTime);
@@ -40,7 +37,7 @@ class CameraRotation {
         var targY = this.form(this.nextCamera.target[1], this.currCamera.target[1], percentageTime);
         var targZ = this.form(this.nextCamera.target[2], this.currCamera.target[2], percentageTime);
         var target = vec3.fromValues(targX, targY, targZ);
-        
+
         this.scene.camera = new CGFcamera(fov, near, far, position, target);
         this.scene.interface.setActiveCamera(this.camera);
     }

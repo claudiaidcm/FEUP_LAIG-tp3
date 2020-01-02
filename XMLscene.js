@@ -148,7 +148,7 @@ class XMLscene extends CGFscene {
         }
 
         if (this.animation != null)
-            this.animation.apply(this.deltaTime);
+            this.animation.apply();
 
         this.lastTime = currentTime;
     }
