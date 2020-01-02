@@ -54,7 +54,7 @@ class MyGame extends CGFobject {
     addAnimsToReplay() {
         if (!this.animsAdded) {
 
-            for (var i = 0; i < this.lastPlays.length-1; i++) {
+            for (var i = 0; i < this.lastPlays.length; i++) {
                 for (var j = 0; j < this.animations[i].keyframes.length - 1; j++) {
                     this.animations[i].keyframes[j].instant = (this.scene.deltaTime / 1000) + i + j;
                     this.animations[i].maxTime = (this.scene.deltaTime / 1000) + i + j;
