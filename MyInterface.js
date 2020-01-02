@@ -58,9 +58,13 @@ class MyInterface extends CGFinterface {
         this.game.add(this.scene, 'currentScene', ["classic", "galaxy"]).onChange(
             this.scene.changeTheme.bind(this.scene)).name('Theme');
 
+        this.game.add(this.scene.graph.game, 'startGame').name("Start game");
+
         this.game.add(this.scene.graph.game, 'undoLastPlay').name("Undo last play");
 
         this.game.add(this.scene.graph.game, 'replayGame').name("Replay game");
+
+        this.game.add(this.scene.graph.game, 'quitGame').name("Quit game");
     }
 
     /**

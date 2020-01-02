@@ -12,6 +12,7 @@ class MyGame extends CGFobject {
         this.textures = textures;
         this.board = new MyBoard(this.scene);
         this.planets = [];
+        this.start = false;
         this.player1turn = true;
         this.player2turn = false;
         this.currPiece = null;
@@ -21,6 +22,8 @@ class MyGame extends CGFobject {
         this.animations = [];
         this.replayTime;
         this.animsAdded = false;
+        this.scene.setPickEnabled(false);
+        this.timeout = 10;
 
         for (var planet = 0; planet < 26; planet++) {
             var id = planet + 1486;
@@ -30,26 +33,68 @@ class MyGame extends CGFobject {
             this.planets.push(obj);
         }
 
+        document.getElementById("info").innerText = "Start a game";
+
     }
 
     undoLastPlay() {
-        if (this.lastPlays.length != 0) {
-            var lastPlay = this.lastPlays.pop();
+        if (this.replay != true) {
+            if (this.lastPlays.length != 0) {
+                var lastPlay = this.lastPlays.pop();
 
-            lastPlay.animation = null;
-            lastPlay.final = null;
-            lastPlay.played = false;
+                lastPlay.animation = null;
+                lastPlay.final = null;
+                lastPlay.played = false;
 
-            if (this.player1turn) {
-                this.player2turn = true;
-                this.player1turn = false;
-            }
-            else {
-                this.player2turn = false;
-                this.player1turn = true;
+                if (this.player1turn) {
+                    this.player2turn = true;
+                    this.player1turn = false;
+                }
+                else {
+                    this.player2turn = false;
+                    this.player1turn = true;
+                }
             }
         }
     }
+
+    startGame() {
+        this.scene.setPickEnabled(true);
+
+        if (this.player1turn)
+            document.getElementById("info").innerText = "Player 1 turn";
+        else if (this.player2turn)
+            document.getElementById("info").innerText = "Player 2 turn";
+
+        this.lastTimePlayed = this.scene.deltaTime;
+    }
+
+    quitGame() {
+        this.board = new MyBoard(this.scene);
+        this.planets = [];
+        this.start = false;
+        this.player1turn = true;
+        this.player2turn = false;
+        this.currPiece = null;
+        this.currTile = null;
+        this.lastPlays = [];
+        this.replay = false;
+        this.animations = [];
+        this.replayTime;
+        this.animsAdded = false;
+        this.scene.setPickEnabled(false);
+
+        for (var planet = 0; planet < 26; planet++) {
+            var id = planet + 1486;
+            var initial = vec3.fromValues(-2, 0.1, (planet % 7) - 3);
+            var obj = new MyPlanet(this.scene, id, false, initial, null, null);
+
+            this.planets.push(obj);
+        }
+
+        document.getElementById("info").innerText = "Start a game";
+    }
+
 
     addAnimsToReplay() {
         if (!this.animsAdded) {
@@ -68,7 +113,7 @@ class MyGame extends CGFobject {
 
     replayGame() {
         if (this.replay != true) {
-            if (this.lastPlays.length < this.planets.length )
+            if (this.lastPlays.length < this.planets.length)
                 console.log("Game is still in course!");
             else {
 
@@ -76,7 +121,7 @@ class MyGame extends CGFobject {
                 this.replayTime = this.scene.deltaTime;
 
                 for (var j = 0; j < this.lastPlays.length; j++) {
-                   
+
                     this.animations.push(this.lastPlays[j].animation);
                     this.lastPlays[j].animation = null;
                     console.log(this.animations.length);
@@ -99,6 +144,22 @@ class MyGame extends CGFobject {
         if (this.replay) {
             this.addAnimsToReplay(this.scene.deltaTime);
         }
+
+        if ((this.timeout*1000 + this.lastTimePlayed) < this.scene.deltaTime) {
+            if(this.player1turn) {
+                this.player2turn = true;
+                this.player1turn = false;
+                document.getElementById("info").innerText = "Player 2 turn";
+            }
+            else if(this.player2turn) {
+                this.player1turn = true;
+                this.player2turn = false;
+                document.getElementById("info").innerText = "Player 1 turn";
+            }
+
+            this.lastTimePlayed = this.scene.deltaTime;
+        }
+            
 
         for (var j = 0; j < this.planets.length; j++) {
             this.scene.pushMatrix();
@@ -156,12 +217,16 @@ class MyGame extends CGFobject {
                                     this.player1turn = false;
                                     this.player2turn = true;
                                     console.log("Escolheu o local com o id " + this.tile.id);
+                                    this.lastTimePlayed = this.scene.deltaTime;
+                                    document.getElementById("info").innerText = "Player 2 turn";
                                 }
                                 else if ((customId >= 784 & customId <= 1485) & this.player2turn) {
                                     this.tile = obj;
                                     this.player1turn = true;
                                     this.player2turn = false;
                                     console.log("Escolheu o local com o id " + this.tile.id);
+                                    this.lastTimePlayed = this.scene.deltaTime;
+                                    document.getElementById("info").innerText = "Player 1 turn";
                                 }
                                 else {
                                     this.piece = null;

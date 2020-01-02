@@ -141,10 +141,12 @@ class XMLscene extends CGFscene {
             this.graph.animations[key].update(this.deltaTime);
         }
 
-        for (var j = 0; j < this.graph.game.planets.length; j++) {
-            if (this.graph.game != null)
-                if (this.graph.game.planets[j].animation != null)
-                    this.graph.game.planets[j].animation.update(this.deltaTime);
+        if (this.sceneInited) {
+            for (var j = 0; j < this.graph.game.planets.length; j++) {
+                if (this.graph.game != null)
+                    if (this.graph.game.planets[j].animation != null)
+                        this.graph.game.planets[j].animation.update(this.deltaTime);
+            }
         }
 
         if (this.animation != null)
@@ -176,7 +178,6 @@ class XMLscene extends CGFscene {
         this.interface.addLights(this.graph.lights);
 
         this.sceneInited = true;
-        this.setPickEnabled(true);
 
         this.currentScene = this.graph.filename.slice(0, -4);
         this.interface.addGameSettings();
