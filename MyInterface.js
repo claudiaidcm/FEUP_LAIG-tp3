@@ -59,6 +59,8 @@ class MyInterface extends CGFinterface {
             this.scene.changeTheme.bind(this.scene)).name('Theme');
 
         this.game.add(this.scene.graph.game, 'undoLastPlay').name("Undo last play");
+
+        this.game.add(this.scene.graph.game, 'replayGame').name("Replay game");
     }
 
     /**

@@ -141,7 +141,7 @@ class XMLscene extends CGFscene {
             this.graph.animations[key].update(this.deltaTime);
         }
 
-        for (var j = 0; j < 27; j++) {
+        for (var j = 0; j < this.graph.game.planets.length; j++) {
             if (this.graph.game != null)
                 if (this.graph.game.planets[j].animation != null)
                     this.graph.game.planets[j].animation.update(this.deltaTime);

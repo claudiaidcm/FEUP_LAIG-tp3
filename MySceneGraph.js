@@ -551,6 +551,7 @@ class MySceneGraph {
     this.shuffle(this.piece_textures);
 
     /*******************************************************/
+    this.piece_textures.pop();
     this.game = new MyGame(this.scene, this, this.piece_textures);
     /*******************************************************/
 

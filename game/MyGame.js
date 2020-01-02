@@ -17,14 +17,19 @@ class MyGame extends CGFobject {
         this.currPiece = null;
         this.currTile = null;
         this.lastPlays = [];
+        this.replay = false;
+        this.animations = [];
+        this.replayTime;
+        this.animsAdded = false;
 
-        for (var planet = 0; planet < 27; planet++) {
+        for (var planet = 0; planet < 26; planet++) {
             var id = planet + 1486;
             var initial = vec3.fromValues(-2, 0.1, (planet % 7) - 3);
             var obj = new MyPlanet(this.scene, id, false, initial, null, null);
 
             this.planets.push(obj);
         }
+
     }
 
     undoLastPlay() {
@@ -46,6 +51,40 @@ class MyGame extends CGFobject {
         }
     }
 
+    addAnimsToReplay() {
+        if (!this.animsAdded) {
+
+            for (var i = 0; i < this.lastPlays.length-1; i++) {
+                for (var j = 0; j < this.animations[i].keyframes.length - 1; j++) {
+                    this.animations[i].keyframes[j].instant = (this.scene.deltaTime / 1000) + i + j;
+                    this.animations[i].maxTime = (this.scene.deltaTime / 1000) + i + j;
+                }
+
+                this.lastPlays[i].animation = this.animations[i];
+            }
+            this.animsAdded = true;
+        }
+    }
+
+    replayGame() {
+        if (this.replay != true) {
+            if (this.lastPlays.length < this.planets.length )
+                console.log("Game is still in course!");
+            else {
+
+                this.replay = true;
+                this.replayTime = this.scene.deltaTime;
+
+                for (var j = 0; j < this.lastPlays.length; j++) {
+                   
+                    this.animations.push(this.lastPlays[j].animation);
+                    this.lastPlays[j].animation = null;
+                    console.log(this.animations.length);
+                }
+            }
+        }
+    }
+
     display() {
         this.scene.pushMatrix();
         this.board.display();
@@ -57,13 +96,17 @@ class MyGame extends CGFobject {
         this.whiteTile.setSpecular(1, 1, 1, 1);
         this.whiteTile.setEmission(0, 0, 0, 1);
 
-        for (var j = 0; j < 26; j++) {
+        if (this.replay) {
+            this.addAnimsToReplay(this.scene.deltaTime);
+        }
+
+        for (var j = 0; j < this.planets.length; j++) {
             this.scene.pushMatrix();
             this.whiteTile.setTexture(this.textures[j]);
             this.whiteTile.apply();
 
             if (this.planets[j].animation != null) {
-                if (this.scene.deltaTime / 1000 < this.planets[j].animation.keyframes[this.planets[j].animation.keyframes.length - 1].instant)
+                if (this.scene.deltaTime / 1000 < this.planets[j].animation.maxTime)
                     this.planets[j].animation.apply();
                 else
                     this.scene.translate(this.planets[j].final[0], this.planets[j].final[1] + 0.01, this.planets[j].final[2]);
@@ -154,8 +197,6 @@ class MyGame extends CGFobject {
                             this.piece.played = true;
 
                             this.lastPlays.push(this.piece);
-
-                            console.log(this.lastPlays);
 
                             this.piece = null;
                             this.tile = null;
