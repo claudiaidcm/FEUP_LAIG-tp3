@@ -83,7 +83,7 @@ class XMLscene extends CGFscene {
     }
 
     updateCamera() {
-        this.animation = new CameraAnimation(this, this.camera, this.cameras[this.cameraId], (this.deltaTime/1000) + 3);
+        this.animation = new CameraRotation(this, this.camera, this.cameras[this.cameraId]);
     }
 
     /**

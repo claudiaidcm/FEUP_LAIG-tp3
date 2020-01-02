@@ -1,79 +1,52 @@
-  /**
- * CameraAnimation class, which represents a KeyFrame Animation
- */
-class CameraAnimation {
+/**
+* CameraAnimation class, which represents a KeyFrame Animation
+* @constructor
+* @param {XMLScene} scene - reference to MyScene object
+* @param {string}   id         Animation Id
+*/
 
-    /**
-     * @constructor
-     * @param {XMLScene} scene      represents the CGFscene
-     * @param {string}   id         Animation Id
-     */
-    constructor(scene, firstCamera, secondCamera, lengthOfTime) {
+class CameraRotation {
+    constructor(scene, currCamera, nextCamera) {
         this.scene = scene;
-        this.positionFirstCamera = firstCamera.position;
-        this.targetFirstCamera = firstCamera.target;
-        this.directionFirstCamera = firstCamera.direction;
-        this.nearFirstCamera = firstCamera.near;
-        this.farFirstCamera = firstCamera.far;
-        this.angleFirstCamera = firstCamera.fov;
 
-        this.positionSecondCamera = secondCamera.position;
-        this.targetSecondCamera = secondCamera.target;
-        this.directionSecondCamera = secondCamera.direction;
-        this.nearSecondCamera = secondCamera.near;
-        this.farSecondCamera = secondCamera.far;
-        this.angleSecondCamera = secondCamera.fov;
+        this.currCamera = currCamera;
+        this.nextCamera = nextCamera;
 
-        this.lengthOfTime = lengthOfTime;
+        this.rotTime = (this.scene.deltaTime/1000) + 1;
+
+        console.log(this.currCamera);
     }
 
     apply(deltaTime) {
 
-        this.timeElapsed = deltaTime/1000;
-
-        if (this.endOfAnimation) {
-            return;
-
-        }
-
-        if (this.lengthOfTime < this.timeElapsed) {
-            this.endOfAnimation = true;
-
-
-            this.setCamera(this.angleSecondCamera, this.nearSecondCamera, this.farSecondCamera, this.positionSecondCamera, this.targetSecondCamera);
-
+        if (this.rotTime < (deltaTime / 1000)) {
+            this.scene.camera = this.nextCamera;
+            this.scene.interface.setActiveCamera(this.camera);
             return;
         }
 
-        var percentageTime = (this.lengthOfTime - this.timeElapsed) / this.lengthOfTime;
+        var percentageTime = (this.rotTime - (deltaTime / 1000)) / this.rotTime;
 
-        let newPositionX = this.lerp(this.positionSecondCamera[0], this.positionFirstCamera[0], percentageTime);
-        let newPositionY = this.lerp(this.positionSecondCamera[1], this.positionFirstCamera[1], percentageTime);
-        let newPositionZ = this.lerp(this.positionSecondCamera[2], this.positionFirstCamera[2], percentageTime);
+        var near = this.form(this.nextCamera.near, this.currCamera.near, percentageTime);
+        var far = this.form(this.nextCamera.far, this.currCamera.far, percentageTime);
+        var fov = this.form(this.nextCamera.fov, this.currCamera.fov, percentageTime);
 
-        let newTargetX = this.lerp(this.targetSecondCamera[0], this.targetFirstCamera[0], percentageTime);
-        let newTargetY = this.lerp(this.targetSecondCamera[1], this.targetFirstCamera[1], percentageTime);
-        let newTargetZ = this.lerp(this.targetSecondCamera[2], this.targetFirstCamera[2], percentageTime);
+        var posX = this.form(this.nextCamera.position[0], this.currCamera.position[0], percentageTime);
+        var posY = this.form(this.nextCamera.position[1], this.currCamera.position[1], percentageTime);
+        var posZ = this.form(this.nextCamera.position[2], this.currCamera.position[2], percentageTime);
+        var position = vec3.fromValues(posX, posY, posZ);
 
-        let near = this.lerp(this.nearSecondCamera, this.nearFirstCamera, percentageTime);
-        let far = this.lerp(this.farSecondCamera, this.farFirstCamera, percentageTime);
-        let fov = this.lerp(this.angleSecondCamera, this.angleFirstCamera, percentageTime);
-
-        this.setCamera(fov, near, far, vec3.fromValues(newPositionX, newPositionY, newPositionZ), vec3.fromValues(newTargetX, newTargetY, newTargetZ));
-
-    }
-
-    setCamera(fov, near, far, position, target) {
-        this.scene.camera = new CGFcamera(fov, near, far, position, target)
+        var targX = this.form(this.nextCamera.target[0], this.currCamera.target[0], percentageTime);
+        var targY = this.form(this.nextCamera.target[1], this.currCamera.target[1], percentageTime);
+        var targZ = this.form(this.nextCamera.target[2], this.currCamera.target[2], percentageTime);
+        var target = vec3.fromValues(targX, targY, targZ);
+        
+        this.scene.camera = new CGFcamera(fov, near, far, position, target);
         this.scene.interface.setActiveCamera(this.camera);
-        this.scene.newCamera = this.scene.camera;
     }
 
-
-    lerp(v0, v1, t) {
-
+    form(v0, v1, t) {
         return v0 + t * (v1 - v0);
-
     }
 
 }
