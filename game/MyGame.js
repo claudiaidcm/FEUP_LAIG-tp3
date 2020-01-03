@@ -13,7 +13,7 @@ class MyGame extends CGFobject {
 
         this.server = new Server();
         this.board = new MyBoard(this.scene);
-        
+
         this.start = false;
         this.player1turn = true;
         this.player2turn = false;
@@ -22,18 +22,54 @@ class MyGame extends CGFobject {
 
         this.currPiece = null;
         this.currTile = null;
-        
+
         this.timeout = 10;
         this.info = "Welcome to EXO! \nStart a game";
 
         this.lastPlays = [];
         this.animations = [];
 
+        this.boardP1 = [
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'sun', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+        ];
+
+        this.boardP2 = [
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'sun', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+        ];
+
         this.planets = [];
         for (var planet = 0; planet < 26; planet++) {
             var id = planet + 1486;
+            var texture = this.textures[planet];
             var initial = vec3.fromValues(-2, 0.1, (planet % 7) - 3);
-            var obj = new MyPlanet(this.scene, id, false, initial, null, null);
+
+            var prologPlanet = texture[0].substring(3, 6);
+
+            var obj = new MyPlanet(this.scene, id, prologPlanet, texture[1], false, initial, null, null);
 
             this.planets.push(obj);
         }
@@ -72,6 +108,20 @@ class MyGame extends CGFobject {
             this.info = "Player 2 turn";
 
         this.lastTimePlayed = this.scene.deltaTime;
+
+        /* Request da erro se for mal sucedido!
+    
+            FUNCIONA NÃO MEXER
+            
+            var request = `teste(${this.timeout})`;
+    
+            this.server.makeRequest(request, function(data) {
+                var response = data.target.response;
+
+                if(response != 'Bad Request')
+                    console.log(response); 
+            });
+        */
     }
 
     quitGame() {
@@ -88,10 +138,12 @@ class MyGame extends CGFobject {
         this.animsAdded = false;
         this.scene.setPickEnabled(false);
 
+        this.graph.shuffle(this.textures);
+
         for (var planet = 0; planet < 26; planet++) {
             var id = planet + 1486;
             var initial = vec3.fromValues(-2, 0.1, (planet % 7) - 3);
-            var obj = new MyPlanet(this.scene, id, false, initial, null, null);
+            var obj = new MyPlanet(this.scene, id, this.textures[planet], false, initial, null, null);
 
             this.planets.push(obj);
         }
@@ -117,8 +169,11 @@ class MyGame extends CGFobject {
 
     replayGame() {
         if (this.replay != true) {
-            if (this.lastPlays.length < this.planets.length)
-                console.log("Game is still in course!");
+            if (this.lastPlays.length < this.planets.length) {
+                var previous = this.info;
+                this.info = "Game is still in course! \n" + previous;
+            }
+
             else {
 
                 this.replay = true;
@@ -149,13 +204,18 @@ class MyGame extends CGFobject {
             this.addAnimsToReplay(this.scene.deltaTime);
         }
 
-        if ((this.timeout*1000 + this.lastTimePlayed) < this.scene.deltaTime) {
-            if(this.player1turn) {
+        if (this.lastPlays.length == this.planets.length) {
+            this.info = "The game has ended!\nTODO: CHECK WINNER";
+            this.scene.setPickEnabled(false);
+        }
+
+        if ((this.timeout * 1000 + this.lastTimePlayed) < this.scene.deltaTime) {
+            if (this.player1turn) {
                 this.player2turn = true;
                 this.player1turn = false;
                 this.info = "Player 2 turn";
             }
-            else if(this.player2turn) {
+            else if (this.player2turn) {
                 this.player1turn = true;
                 this.player2turn = false;
                 this.info = "Player 1 turn";
@@ -163,11 +223,11 @@ class MyGame extends CGFobject {
 
             this.lastTimePlayed = this.scene.deltaTime;
         }
-            
+
 
         for (var j = 0; j < this.planets.length; j++) {
             this.scene.pushMatrix();
-            this.whiteTile.setTexture(this.textures[j]);
+            this.whiteTile.setTexture(this.planets[j].texture);
             this.whiteTile.apply();
 
             if (this.planets[j].animation != null) {
@@ -188,6 +248,38 @@ class MyGame extends CGFobject {
         this.processPicking();
     }
 
+    isValidMove(position) {
+        //prolog function: valid_move(coord(X, Y), Board).
+
+        /*var board;
+        var x;
+        var y;
+
+        if (this.player1turn) {
+            board = this.boardP1;
+            x = 28 - position[2];
+            y = position[0];
+        }
+        else if (this.player2turn) {
+            board=this.boardP2;
+            x = 0 - 1 - position[0];
+            y = 0;
+        }
+
+        var request = `teste(${this.timeout})`;
+
+        this.server.makeRequest(request, function (data) {
+            var response = data.target.response;
+
+            if (response != 'Bad Request')
+                return true;
+            else
+                return false;
+        });*/
+
+        return true;
+    }
+
     processPicking() {
         if (this.scene.pickMode == false) {
             if (this.scene.pickResults != null && this.scene.pickResults.length > 0) {
@@ -197,6 +289,8 @@ class MyGame extends CGFobject {
                     if (obj) {
                         var customId = this.scene.pickResults[i][1];
                         console.log("Picked object: " + obj + ", with pick id " + customId);
+
+                        console.log(obj.position);
 
                         if (this.piece == null) {
                             if (customId < 1486)
@@ -229,6 +323,7 @@ class MyGame extends CGFobject {
                                     this.player1turn = true;
                                     this.player2turn = false;
                                     console.log("Escolheu o local com o id " + this.tile.id);
+
                                     this.lastTimePlayed = this.scene.deltaTime;
                                     this.info = "Player 1 turn";
                                 }
@@ -241,34 +336,37 @@ class MyGame extends CGFobject {
                         }
 
                         if (this.piece != null & this.tile != null) {
-                            this.piece.final = this.tile.position;
 
-                            var keyframes = [];
+                            if (this.isValidMove(this.tile)) {
+                                this.piece.final = this.tile.position;
 
-                            var keyFrameTransfs = [];
-                            keyFrameTransfs.push(...[this.piece.initial, vec3.fromValues(0, 0, 0), vec3.fromValues(1, 1, 1)]);
-                            var keyf = new Keyframe(this.graph, this.scene.deltaTime / 1000, keyFrameTransfs);
-                            keyframes.push(keyf);
+                                var keyframes = [];
 
-                            var keyFrameTransfs = [];
-                            keyFrameTransfs.push(...[vec3.fromValues(this.piece.final[0] / 2, 3, this.piece.final[2] / 2), vec3.fromValues(0, 0, 0), vec3.fromValues(1, 1, 1)]);
-                            var keyf = new Keyframe(this.graph, this.scene.deltaTime / 1000 + 1, keyFrameTransfs);
-                            keyframes.push(keyf);
+                                var keyFrameTransfs = [];
+                                keyFrameTransfs.push(...[this.piece.initial, vec3.fromValues(0, 0, 0), vec3.fromValues(1, 1, 1)]);
+                                var keyf = new Keyframe(this.graph, this.scene.deltaTime / 1000, keyFrameTransfs);
+                                keyframes.push(keyf);
 
-                            var keyFrameTransfs = [];
-                            keyFrameTransfs.push(...[vec3.fromValues(this.piece.final[0], 0.15, this.piece.final[2]), vec3.fromValues(0, 0, 0), vec3.fromValues(1, 1, 1)]);
-                            var keyf = new Keyframe(this.graph, this.scene.deltaTime / 1000 + 2, keyFrameTransfs);
-                            keyframes.push(keyf);
+                                var keyFrameTransfs = [];
+                                keyFrameTransfs.push(...[vec3.fromValues(this.piece.final[0] / 2, 3, this.piece.final[2] / 2), vec3.fromValues(0, 0, 0), vec3.fromValues(1, 1, 1)]);
+                                var keyf = new Keyframe(this.graph, this.scene.deltaTime / 1000 + 1, keyFrameTransfs);
+                                keyframes.push(keyf);
 
-                            var keyFrameAnim = new KeyframeAnimation(customId, this.scene, keyframes);
-                            this.piece.animation = keyFrameAnim;
+                                var keyFrameTransfs = [];
+                                keyFrameTransfs.push(...[vec3.fromValues(this.piece.final[0], 0.15, this.piece.final[2]), vec3.fromValues(0, 0, 0), vec3.fromValues(1, 1, 1)]);
+                                var keyf = new Keyframe(this.graph, this.scene.deltaTime / 1000 + 2, keyFrameTransfs);
+                                keyframes.push(keyf);
 
-                            this.piece.played = true;
+                                var keyFrameAnim = new KeyframeAnimation(customId, this.scene, keyframes);
+                                this.piece.animation = keyFrameAnim;
 
-                            this.lastPlays.push(this.piece);
+                                this.piece.played = true;
 
-                            this.piece = null;
-                            this.tile = null;
+                                this.lastPlays.push(this.piece);
+
+                                this.piece = null;
+                                this.tile = null;
+                            }
                         }
                     }
                 }

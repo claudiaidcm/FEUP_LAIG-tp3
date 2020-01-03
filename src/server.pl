@@ -105,10 +105,17 @@ print_header_line(_).
 
 :- consult('game.pl').
 
-parse_input(menu, menu).
-parse_input(test(C,N), Res) :- test(C,Res,N).
-parse_input(quit, goodbye).
+/* MATERIAL DO REQUEST QUE FUNCIONA 
 
-test(_,[],N) :- N =< 0.
-test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
+*NAO MEXER*
+
+parse_input(teste(Numero), Status):-
+	teste(Numero,Status).
+
+teste(Numero, Status) :-
+	Numero > 10,
+	Status is 1.*/
+
+
+
 	

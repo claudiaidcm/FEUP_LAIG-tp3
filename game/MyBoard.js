@@ -24,7 +24,7 @@ class MyBoard extends CGFobject {
         this.tiles = [];
 
         for (var i = 0; i < 27; i++) {
-            for (var j = 0; j < 55; j++) {
+            for (var j = 0; j <= 55; j++) {
                 if ((i != 13 || j != 13) & (i != 13 || j != 41) & j != 28) {
                     var id = 27 * j + i + 1;
                     var position = vec3.fromValues(i, 0.1, 28 - j);

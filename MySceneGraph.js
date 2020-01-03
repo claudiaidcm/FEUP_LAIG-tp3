@@ -539,7 +539,7 @@ class MySceneGraph {
       this.textures[textureId] = temp_tex;
 
       if (textureId.includes("exo"))
-        this.piece_textures.push(temp_tex);
+        this.piece_textures.push([textureId, temp_tex]);
 
       this.numTextures++;
     }

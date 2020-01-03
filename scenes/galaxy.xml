@@ -152,8 +152,8 @@
 
     <component id="board">
       <transformation>
-        <translate x="12" y="0" z="1"/>
-        <scale x="30" y="13" z="56"/>
+        <translate x="12" y="0" z="0.5"/>
+        <scale x="30" y="13" z="57"/>
       </transformation>
       <materials>
         <material id="board"/>
