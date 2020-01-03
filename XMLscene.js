@@ -13,7 +13,7 @@ class XMLscene extends CGFscene {
 
         this.interface = myinterface;
 
-        this.displayAxis = true;
+        this.displayAxis = false;
         this.scaleFactor = 1;
 
         this.numMaterial = 0;

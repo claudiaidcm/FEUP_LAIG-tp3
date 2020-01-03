@@ -20,8 +20,8 @@ class MyInterface extends CGFinterface {
 
         this.gui = new dat.GUI();
 
-        this.aspect = this.gui.addFolder('Aspect');
-        this.game = this.gui.addFolder('Game');
+        this.aspect = this.gui.addFolder('Global aspect');
+        this.gameSettings = this.gui.addFolder('Game settings');
 
         //Show or not axis control
         this.aspect.add(this.scene, 'displayAxis').name('Display Axis');
@@ -55,16 +55,18 @@ class MyInterface extends CGFinterface {
     }
 
     addGameSettings() {
-        this.game.add(this.scene, 'currentScene', ["classic", "galaxy"]).onChange(
+        this.gameSettings.add(this.scene, 'currentScene', ["classic", "galaxy"]).onChange(
             this.scene.changeTheme.bind(this.scene)).name('Theme');
 
-        this.game.add(this.scene.graph.game, 'startGame').name("Start game");
+        this.gameSettings.add(this.scene.graph.game, 'startGame').name("Start game");
 
-        this.game.add(this.scene.graph.game, 'undoLastPlay').name("Undo last play");
+        this.gameSettings.add(this.scene.graph.game, 'timeout', 5, 20).name("Set timeout");
 
-        this.game.add(this.scene.graph.game, 'replayGame').name("Replay game");
+        this.gameSettings.add(this.scene.graph.game, 'undoLastPlay').name("Undo last play");
 
-        this.game.add(this.scene.graph.game, 'quitGame').name("Quit game");
+        this.gameSettings.add(this.scene.graph.game, 'replayGame').name("Replay game");
+
+        this.gameSettings.add(this.scene.graph.game, 'quitGame').name("Quit game");
     }
 
     /**

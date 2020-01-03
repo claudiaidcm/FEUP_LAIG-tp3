@@ -24,6 +24,7 @@ class MyGame extends CGFobject {
         this.animsAdded = false;
         this.scene.setPickEnabled(false);
         this.timeout = 10;
+        this.info = "Welcome to EXO! \nStart a game";
 
         for (var planet = 0; planet < 26; planet++) {
             var id = planet + 1486;
@@ -32,8 +33,6 @@ class MyGame extends CGFobject {
 
             this.planets.push(obj);
         }
-
-        document.getElementById("info").innerText = "Start a game";
 
     }
 
@@ -62,9 +61,9 @@ class MyGame extends CGFobject {
         this.scene.setPickEnabled(true);
 
         if (this.player1turn)
-            document.getElementById("info").innerText = "Player 1 turn";
+            this.info = "Player 1 turn";
         else if (this.player2turn)
-            document.getElementById("info").innerText = "Player 2 turn";
+            this.info = "Player 2 turn";
 
         this.lastTimePlayed = this.scene.deltaTime;
     }
@@ -92,7 +91,7 @@ class MyGame extends CGFobject {
             this.planets.push(obj);
         }
 
-        document.getElementById("info").innerText = "Start a game";
+        this.info = "Start a game";
     }
 
 
@@ -131,6 +130,7 @@ class MyGame extends CGFobject {
     }
 
     display() {
+        document.getElementById("info").innerText = this.info;
         this.scene.pushMatrix();
         this.board.display();
         this.scene.popMatrix();
@@ -149,12 +149,12 @@ class MyGame extends CGFobject {
             if(this.player1turn) {
                 this.player2turn = true;
                 this.player1turn = false;
-                document.getElementById("info").innerText = "Player 2 turn";
+                this.info = "Player 2 turn";
             }
             else if(this.player2turn) {
                 this.player1turn = true;
                 this.player2turn = false;
-                document.getElementById("info").innerText = "Player 1 turn";
+                this.info = "Player 1 turn";
             }
 
             this.lastTimePlayed = this.scene.deltaTime;
@@ -218,7 +218,7 @@ class MyGame extends CGFobject {
                                     this.player2turn = true;
                                     console.log("Escolheu o local com o id " + this.tile.id);
                                     this.lastTimePlayed = this.scene.deltaTime;
-                                    document.getElementById("info").innerText = "Player 2 turn";
+                                    this.info = "Player 2 turn";
                                 }
                                 else if ((customId >= 784 & customId <= 1485) & this.player2turn) {
                                     this.tile = obj;
@@ -226,7 +226,7 @@ class MyGame extends CGFobject {
                                     this.player2turn = false;
                                     console.log("Escolheu o local com o id " + this.tile.id);
                                     this.lastTimePlayed = this.scene.deltaTime;
-                                    document.getElementById("info").innerText = "Player 1 turn";
+                                    this.info = "Player 1 turn";
                                 }
                                 else {
                                     this.piece = null;
