@@ -552,7 +552,7 @@ class MySceneGraph {
 
     /*******************************************************/
     this.piece_textures.pop();
-    this.game = new MyGame(this.scene, this, this.piece_textures);
+    this.game = new MyGame(this.scene);
     /*******************************************************/
 
     this.log("Parsed textures");

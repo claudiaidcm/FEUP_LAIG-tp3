@@ -59,6 +59,7 @@ serialInclude(['../lib/CGF.js',
 	'game/MyBoard.js',
 	'game/MyGame.js',
 	'game/CameraRotation.js',
+	'game/Server.js',
 
 	main = function () {
 		// Standard application, scene and interface setup

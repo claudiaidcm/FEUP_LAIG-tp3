@@ -5,27 +5,31 @@
   */
 
 class MyGame extends CGFobject {
-    constructor(scene, graph, textures) {
+    constructor(scene) {
         super(scene);
         this.scene = scene;
-        this.graph = graph;
-        this.textures = textures;
+        this.graph = this.scene.graph;
+        this.textures = this.graph.piece_textures;
+
+        this.server = new Server();
         this.board = new MyBoard(this.scene);
-        this.planets = [];
+        
         this.start = false;
         this.player1turn = true;
         this.player2turn = false;
+        this.replay = false;
+        this.animsAdded = false;
+
         this.currPiece = null;
         this.currTile = null;
-        this.lastPlays = [];
-        this.replay = false;
-        this.animations = [];
-        this.replayTime;
-        this.animsAdded = false;
-        this.scene.setPickEnabled(false);
+        
         this.timeout = 10;
         this.info = "Welcome to EXO! \nStart a game";
 
+        this.lastPlays = [];
+        this.animations = [];
+
+        this.planets = [];
         for (var planet = 0; planet < 26; planet++) {
             var id = planet + 1486;
             var initial = vec3.fromValues(-2, 0.1, (planet % 7) - 3);
@@ -33,6 +37,8 @@ class MyGame extends CGFobject {
 
             this.planets.push(obj);
         }
+
+        this.scene.setPickEnabled(false);
 
     }
 
@@ -79,7 +85,6 @@ class MyGame extends CGFobject {
         this.lastPlays = [];
         this.replay = false;
         this.animations = [];
-        this.replayTime;
         this.animsAdded = false;
         this.scene.setPickEnabled(false);
 
@@ -117,7 +122,6 @@ class MyGame extends CGFobject {
             else {
 
                 this.replay = true;
-                this.replayTime = this.scene.deltaTime;
 
                 for (var j = 0; j < this.lastPlays.length; j++) {
 
