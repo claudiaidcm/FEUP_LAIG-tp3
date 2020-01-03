@@ -251,22 +251,25 @@ class MyGame extends CGFobject {
     isValidMove(position) {
         //prolog function: valid_move(coord(X, Y), Board).
 
-        /*var board;
+        var board;
         var x;
         var y;
 
-        if (this.player1turn) {
+        if (this.player2turn) {
             board = this.boardP1;
-            x = 28 - position[2];
+            x = 27 - position[2];
             y = position[0];
         }
-        else if (this.player2turn) {
+        else if (this.player1turn) {
             board=this.boardP2;
-            x = 0 - 1 - position[0];
-            y = 0;
+            x = 0 - position[2] - 1;
+            y = position[0];
         }
 
-        var request = `teste(${this.timeout})`;
+        console.log(x + " " + y);
+
+
+        var request = `testMove(${x},${y},${board})`;
 
         this.server.makeRequest(request, function (data) {
             var response = data.target.response;
@@ -275,7 +278,7 @@ class MyGame extends CGFobject {
                 return true;
             else
                 return false;
-        });*/
+        });
 
         return true;
     }
@@ -289,8 +292,6 @@ class MyGame extends CGFobject {
                     if (obj) {
                         var customId = this.scene.pickResults[i][1];
                         console.log("Picked object: " + obj + ", with pick id " + customId);
-
-                        console.log(obj.position);
 
                         if (this.piece == null) {
                             if (customId < 1486)
@@ -318,7 +319,7 @@ class MyGame extends CGFobject {
                                     this.lastTimePlayed = this.scene.deltaTime;
                                     this.info = "Player 2 turn";
                                 }
-                                else if ((customId >= 784 & customId <= 1485) & this.player2turn) {
+                                else if ((customId >= 757 & customId <= 1485) & this.player2turn) {
                                     this.tile = obj;
                                     this.player1turn = true;
                                     this.player2turn = false;
@@ -337,7 +338,7 @@ class MyGame extends CGFobject {
 
                         if (this.piece != null & this.tile != null) {
 
-                            if (this.isValidMove(this.tile)) {
+                            if (this.isValidMove(this.tile.position)) {
                                 this.piece.final = this.tile.position;
 
                                 var keyframes = [];
