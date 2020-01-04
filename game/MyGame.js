@@ -114,9 +114,16 @@ class MyGame extends CGFobject {
             if (this.lastPlays.length != 0) {
                 var lastPlay = this.lastPlays.pop();
 
-                lastPlay.animation = null;
-                lastPlay.final = null;
-                lastPlay.played = false;
+                if (this.player2turn) {
+                    var x = 28 - lastPlay.final[2];
+                    var y = lastPlay.final[0];
+                    this.boardP1[y][x] = 'empty';
+                }
+                else if (this.player1turn) {
+                    var x = 0 - lastPlay.final[2];
+                    var y = lastPlay.final[0];
+                    this.boardP2[y][x] = 'empty';
+                }
 
                 if (this.player1turn) {
                     this.player2turn = true;
@@ -125,6 +132,19 @@ class MyGame extends CGFobject {
                 else {
                     this.player2turn = false;
                     this.player1turn = true;
+                }
+
+                lastPlay.animation = null;
+                lastPlay.final = null;
+                lastPlay.played = false;
+
+                this.lastTimePlayed = this.scene.deltaTime;
+
+                if (this.player1turn) {
+                    this.info = "Player 1 turn";
+                }
+                else {
+                    this.info = "Player 2 turn";
                 }
             }
         }
