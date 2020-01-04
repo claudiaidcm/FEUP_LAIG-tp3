@@ -60,7 +60,7 @@ class MyInterface extends CGFinterface {
 
         this.gameSettings.add(this.scene.graph.game, 'startGame').name("Start game");
 
-        this.gameSettings.add(this.scene.graph.game, 'timeout', 5, 20).name("Set timeout");
+        this.gameSettings.add(this.scene.graph.game, 'timeout', 10, 30).name("Set timeout");
 
         this.gameSettings.add(this.scene.graph.game, 'undoLastPlay').name("Undo last play");
 

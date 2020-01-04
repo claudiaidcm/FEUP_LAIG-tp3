@@ -19,14 +19,14 @@ class MyGame extends CGFobject {
         this.player2turn = false;
         this.replay = false;
         this.animsAdded = false;
-        this.return_value = null;
+        this.quited = false;
 
         this.currPiece = null;
         this.currTile = null;
 
         this.player1points = -1;
         this.player2points = -1;
-        this.timeout = 10;
+        this.timeout = 15;
         this.info = "Welcome to EXO! \nStart a game";
 
         this.lastPlays = [];
@@ -93,7 +93,7 @@ class MyGame extends CGFobject {
         ];
 
         this.planets = [];
-        for (var planet = 0; planet < 8; planet++) {
+        for (var planet = 0; planet < 26; planet++) {
             var id = planet + 1486;
             var texture = this.textures[planet];
             var initial = vec3.fromValues(-2, 0.1, (planet % 7) - 3);
@@ -110,7 +110,7 @@ class MyGame extends CGFobject {
     }
 
     undoLastPlay() {
-        if (this.replay != true) {
+        if (this.replay != true & this.quited != true) {
             if (this.lastPlays.length != 0) {
                 var lastPlay = this.lastPlays.pop();
 
@@ -142,30 +142,10 @@ class MyGame extends CGFobject {
     }
 
     quitGame() {
-        this.board = new MyBoard(this.scene);
-        this.planets = [];
-        this.start = false;
-        this.player1turn = true;
-        this.player2turn = false;
-        this.currPiece = null;
-        this.currTile = null;
-        this.lastPlays = [];
-        this.replay = false;
-        this.animations = [];
-        this.animsAdded = false;
         this.scene.setPickEnabled(false);
+        this.quited = true;
 
-        this.graph.shuffle(this.textures);
-
-        for (var planet = 0; planet < 26; planet++) {
-            var id = planet + 1486;
-            var initial = vec3.fromValues(-2, 0.1, (planet % 7) - 3);
-            var obj = new MyPlanet(this.scene, id, this.textures[planet], false, initial, null, null);
-
-            this.planets.push(obj);
-        }
-
-        this.info = "Start a game";
+        this.info = "Game quited!";
     }
 
 
@@ -225,7 +205,6 @@ class MyGame extends CGFobject {
     }
 
     display() {
-        document.getElementById("info").innerText = this.info;
         this.scene.pushMatrix();
         this.board.display();
         this.scene.popMatrix();
@@ -261,6 +240,8 @@ class MyGame extends CGFobject {
             this.info = "Player 1 points: " + this.player1points + "\nPlayer 2 points: " + this.player2points + "\n" + winner;
 
         }
+
+        document.getElementById("info").innerText = this.info;
 
         if ((this.timeout * 1000 + this.lastTimePlayed) < this.scene.deltaTime) {
             if (this.player1turn) {
