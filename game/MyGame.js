@@ -277,13 +277,52 @@ class MyGame extends CGFobject {
         this.processPicking();
     }
 
+    getPrologPlanet(planet) {
+        console.log(planet[1]);
+        var size; //small, medium or large
+        var colour; //red, blue or green
+        var type; //gaseous, terrestrial or green
+
+        // get prolog's planet size
+        if(planet[0] == 'S')
+            size = 'small';
+        else if (planet[0] == 'M')
+            size = 'medium';
+        else if (planet[0] == 'L')
+            size = 'large';
+
+        // get prolog's planet colour
+        if(planet[1] == 'R')
+            colour = 'red';
+        else if (planet[1] == 'W')
+            colour = 'blue';
+        else if (planet[1] == 'G')
+            colour = 'green';
+
+        // get prolog's planet type
+        if(planet[2] == 'R')
+            type = 'ringed';
+        else if (planet[2] == 'T')
+            type = 'terrestrial';
+        else if (planet[2] == 'G')
+            type = 'gaseous';
+
+        
+        console.log(size+","+colour+","+type);
+
+        return size+","+colour+","+type;
+    }
+
     getBoardString(board) {
         var converted = '[';
 
         for (var i = 0; i < board.length; i++) {
             converted += '[';
             for (var j = 0; j < board[i].length; j++) {
-                converted += board[i][j];;
+                if (board[i][j] == 'sun' || board[i][j] == 'empty')
+                    converted += board[i][j];
+                else
+                    converted += ('planet(' + this.getPrologPlanet(board[i][j]) + ')');
 
                 if (j != board[i].length - 1)
                     converted += ',';
@@ -320,7 +359,7 @@ class MyGame extends CGFobject {
 
         var game = this;
 
-        console.log(x + "," + y);
+        console.log(converted);
 
         this.server.makeRequest(request, function (data) {
             var response = data.target.response;
@@ -361,27 +400,27 @@ class MyGame extends CGFobject {
 
                 if (game.player1turn) {
                     board = game.boardP1;
-                    x = 27 - game.tile.position[2];
+                    x = 28 - game.tile.position[2];
                     y = game.tile.position[0];
-                    board[x][y] = 'sun';
+                    board[y][x] = game.piece.prologPlanet;
                 }
                 else if (game.player2turn) {
                     board = game.boardP2;
-                    x = 0 - game.tile.position[2] - 1;
+                    x = 0 - game.tile.position[2];
                     y = game.tile.position[0];
-                    board[x][y] = game.piece.prologPlanet;
+                    board[y][x] = game.piece.prologPlanet;
                 }
 
                 if (game.player2turn) {
-                     game.player2turn = false;
-                     game.player1turn = true;
-                     game.info = "Player 1 turn";
-                 }
-                 else if (game.player1turn) {
-                     game.player2turn = true;
-                     game.player1turn = false;
-                     game.info = "Player 2 turn";
-                 }
+                    game.player2turn = false;
+                    game.player1turn = true;
+                    game.info = "Player 1 turn";
+                }
+                else if (game.player1turn) {
+                    game.player2turn = true;
+                    game.player1turn = false;
+                    game.info = "Player 2 turn";
+                }
 
                 game.tile = null;
                 game.piece = null;
