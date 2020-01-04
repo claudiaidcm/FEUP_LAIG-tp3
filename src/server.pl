@@ -105,13 +105,6 @@ print_header_line(_).
 
 :- consult('game.pl').
 
-/*parse_input(teste(Numero), Status):-
-	teste(Numero,Status).
-
-teste(Numero, Status) :-
-	Numero > 10,
-	Status is 1.*/
-
 parse_input(testMove(X, Y, Board), Status):-
  (valid_move(coord(X, Y), Board) ->
 	Status is 0;

@@ -139,20 +139,6 @@ class MyGame extends CGFobject {
             this.info = "Player 2 turn";
 
         this.lastTimePlayed = this.scene.deltaTime;
-
-        /* Request da erro se for mal sucedido!
-    
-            FUNCIONA NÃO MEXER
-            
-            var request = `teste(${this.timeout})`;
-    
-            this.server.makeRequest(request, function(data) {
-                var response = data.target.response;
-
-                if(response != 'Bad Request')
-                    console.log(response); 
-            });
-        */
     }
 
     quitGame() {
