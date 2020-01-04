@@ -24,6 +24,8 @@ class MyGame extends CGFobject {
         this.currPiece = null;
         this.currTile = null;
 
+        this.player1points = -1;
+        this.player2points = -1;
         this.timeout = 10;
         this.info = "Welcome to EXO! \nStart a game";
 
@@ -91,7 +93,7 @@ class MyGame extends CGFobject {
         ];
 
         this.planets = [];
-        for (var planet = 0; planet < 26; planet++) {
+        for (var planet = 0; planet < 8; planet++) {
             var id = planet + 1486;
             var texture = this.textures[planet];
             var initial = vec3.fromValues(-2, 0.1, (planet % 7) - 3);
@@ -211,10 +213,29 @@ class MyGame extends CGFobject {
 
                     this.animations.push(this.lastPlays[j].animation);
                     this.lastPlays[j].animation = null;
-                    console.log(this.animations.length);
                 }
             }
         }
+    }
+
+    checkWinner() {
+        var game = this;
+
+        var converted1 = this.getBoardString(this.boardP1);
+        var request1 = `points(${converted1})`;
+
+        this.server.makeRequest(request1, function (data) {
+            var response = data.target.response;
+            game.player1points = response;
+        });
+
+        var converted2 = this.getBoardString(this.boardP2);
+        var request2 = `points(${converted2})`;
+
+        this.server.makeRequest(request2, function (data) {
+            var response = data.target.response;
+            game.player2points = response;
+        });
     }
 
     display() {
@@ -233,9 +254,26 @@ class MyGame extends CGFobject {
             this.addAnimsToReplay(this.scene.deltaTime);
         }
 
-        if (this.lastPlays.length == this.planets.length) {
-            this.info = "The game has ended!\nTODO: CHECK WINNER";
-            this.scene.setPickEnabled(false);
+        if ((this.player1points == -1) & (this.player2points == -1)) {
+            if (this.lastPlays.length == this.planets.length) {
+                this.info = "The game has ended!\nChecking winner...";
+                this.scene.setPickEnabled(false);
+                this.checkWinner();
+            }
+        }
+        else if ((this.player1points != -1) & (this.player2points != -1)) {
+
+            var winner;
+
+            if (this.player2points > this.player1points)
+                winner = "The winner is Player 2!";
+            else if (this.player2points < this.player1points)
+                winner = "The winner is Player 1!";
+            else
+                winner = "It's a tie!";
+
+            this.info = "Player 1 points: " + this.player1points + "\nPlayer 2 points: " + this.player2points + "\n" + winner;
+
         }
 
         if ((this.timeout * 1000 + this.lastTimePlayed) < this.scene.deltaTime) {
@@ -278,13 +316,12 @@ class MyGame extends CGFobject {
     }
 
     getPrologPlanet(planet) {
-        console.log(planet[1]);
         var size; //small, medium or large
         var colour; //red, blue or green
         var type; //gaseous, terrestrial or green
 
         // get prolog's planet size
-        if(planet[0] == 'S')
+        if (planet[0] == 'S')
             size = 'small';
         else if (planet[0] == 'M')
             size = 'medium';
@@ -292,7 +329,7 @@ class MyGame extends CGFobject {
             size = 'large';
 
         // get prolog's planet colour
-        if(planet[1] == 'R')
+        if (planet[1] == 'R')
             colour = 'red';
         else if (planet[1] == 'W')
             colour = 'blue';
@@ -300,17 +337,14 @@ class MyGame extends CGFobject {
             colour = 'green';
 
         // get prolog's planet type
-        if(planet[2] == 'R')
+        if (planet[2] == 'R')
             type = 'ringed';
         else if (planet[2] == 'T')
             type = 'terrestrial';
         else if (planet[2] == 'G')
             type = 'gaseous';
 
-        
-        console.log(size+","+colour+","+type);
-
-        return size+","+colour+","+type;
+        return size + "," + colour + "," + type;
     }
 
     getBoardString(board) {
@@ -358,8 +392,6 @@ class MyGame extends CGFobject {
         var request = `testMove(${x},${y},${converted})`;
 
         var game = this;
-
-        console.log(converted);
 
         this.server.makeRequest(request, function (data) {
             var response = data.target.response;

@@ -117,6 +117,9 @@ parse_input(testMove(X, Y, Board), Status):-
 	Status is 0;
 	Status is 1).
 
+parse_input(points(Board), Status):-
+ 	value(Board, Status).
+
 
 
 
