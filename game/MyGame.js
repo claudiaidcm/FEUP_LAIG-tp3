@@ -238,7 +238,7 @@ class MyGame extends CGFobject {
             this.scene.setPickEnabled(false);
         }
 
-        /*if ((this.timeout * 1000 + this.lastTimePlayed) < this.scene.deltaTime) {
+        if ((this.timeout * 1000 + this.lastTimePlayed) < this.scene.deltaTime) {
             if (this.player1turn) {
                 this.player2turn = true;
                 this.player1turn = false;
@@ -251,7 +251,7 @@ class MyGame extends CGFobject {
             }
 
             this.lastTimePlayed = this.scene.deltaTime;
-        }*/
+        }
 
 
         for (var j = 0; j < this.planets.length; j++) {
@@ -424,6 +424,7 @@ class MyGame extends CGFobject {
 
                 game.tile = null;
                 game.piece = null;
+                game.lastTimePlayed = game.scene.deltaTime;
             }
         });
     }
