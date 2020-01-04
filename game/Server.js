@@ -2,8 +2,9 @@
  * Create connection to prolog
  */
 class Server {
-    constructor() {
+    constructor(game) {
         this.port = 8081;
+        this.game = game;
     };
 
     /**

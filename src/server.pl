@@ -113,11 +113,12 @@ teste(Numero, Status) :-
 	Status is 1.*/
 
 parse_input(testMove(X, Y, Board), Status):-
-	testMove(coord(X, Y), Board, Status).
+ (valid_move(coord(X, Y), Board) ->
+	Status is 0;
+	Status is 1).
 
-testMove(coord(X, Y), Board, Status) :-
-	valid_move(coord(X, Y), Board),
-	Status is 1. 
+
+
 
 
 
