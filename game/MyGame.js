@@ -263,7 +263,7 @@ class MyGame extends CGFobject {
 
         document.getElementById("info").innerText = this.info;
 
-        if ((this.timeout * 1000 + this.lastTimePlayed) < this.scene.deltaTime) {
+        if ((!this.quited) & ((this.timeout * 1000 + this.lastTimePlayed) < this.scene.deltaTime)) {
             if (this.player1turn) {
                 this.player2turn = true;
                 this.player1turn = false;
