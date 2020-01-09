@@ -55,18 +55,18 @@ class MyInterface extends CGFinterface {
     }
 
     addGameSettings() {
-        this.gameSettings.add(this.scene, 'currentScene', ["classic", "galaxy"]).onChange(
-            this.scene.changeTheme.bind(this.scene)).name('Theme');
-
         this.gameSettings.add(this.scene.graph.game, 'startGame').name("Start game");
-
-        this.gameSettings.add(this.scene.graph.game, 'timeout', 10, 30).name("Set timeout");
 
         this.gameSettings.add(this.scene.graph.game, 'undoLastPlay').name("Undo last play");
 
         this.gameSettings.add(this.scene.graph.game, 'replayGame').name("Replay game");
 
         this.gameSettings.add(this.scene.graph.game, 'quitGame').name("Quit game");
+
+        this.gameSettings.add(this.scene, 'currentScene', ["classic", "galaxy"]).onChange(
+            this.scene.changeTheme.bind(this.scene)).name('Theme');
+
+        this.gameSettings.add(this.scene.graph.game, 'timeout', 10, 30).name("Set timeout");
     }
 
     /**
