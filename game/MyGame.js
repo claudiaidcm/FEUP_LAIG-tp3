@@ -15,7 +15,7 @@ class MyGame extends CGFobject {
         this.board = new MyBoard(this.scene);
 
         this.gameInCourse = false;
-        
+
         this.timeout = 15;
         this.info = "Welcome to EXO! \nStart a game";
 
@@ -29,8 +29,10 @@ class MyGame extends CGFobject {
         this.player2turn = false;
         this.animsAdded = false;
 
-        this.player1points = -1;
-        this.player2points = -1;
+        this.player1points = 0;
+        this.player2points = 0;
+        this.finalplayer1points = -1;
+        this.finalplayer2points = -1;
 
         this.lastPlays = [];
         this.animations = [];
@@ -50,8 +52,6 @@ class MyGame extends CGFobject {
             this.info = "Player 2 turn";
 
         this.gameInCourse = true;
-        this.lastPlays = [];
-        this.animations = [];
 
         this.lastTimePlayed = this.scene.deltaTime;
     }
@@ -85,7 +85,7 @@ class MyGame extends CGFobject {
     // Create the planets that are going to be pieces of the game
     createPlanets() {
         this.planets = [];
-        for (var planet = 0; planet < 10; planet++) {
+        for (var planet = 0; planet < 5; planet++) {
             var id = planet + 1486;
             var texture = this.textures[planet];
             var initial = vec3.fromValues(-2, 0.1, (planet % 7) - 3);
@@ -145,29 +145,43 @@ class MyGame extends CGFobject {
     }
 
     replayGame() {
-        if (this.replay != true) {
 
-            if (!this.gameInCourse)
-                this.info = "You have to play a game to replay it."
+        if (this.lastPlays.length < this.planets.length) {
+            var previous = this.info;
+            this.info = "Game is still in course! \n" + previous;
+        }
 
-            else if (this.lastPlays.length < this.planets.length) {
-                var previous = this.info;
-                this.info = "Game is still in course! \n" + previous;
-            }
+        else {
+            this.replay = true;
 
-            else {
-                this.replay = true;
-
-                for (var j = 0; j < this.lastPlays.length; j++) {
-
-                    this.animations.push(this.lastPlays[j].animation);
-                    this.lastPlays[j].animation = null;
-                }
+            for (var j = 0; j < this.lastPlays.length; j++) {
+                this.animations.push(this.lastPlays[j].animation);
+                this.lastPlays[j].animation = null;
             }
         }
     }
 
     checkWinner() {
+        var game = this;
+
+        var converted1 = this.getBoardString(this.boardP1);
+        var request1 = `points(${converted1})`;
+
+        this.server.makeRequest(request1, function (data) {
+            var response = data.target.response;
+            game.finalplayer1points = response;
+        });
+
+        var converted2 = this.getBoardString(this.boardP2);
+        var request2 = `points(${converted2})`;
+
+        this.server.makeRequest(request2, function (data) {
+            var response = data.target.response;
+            game.finalplayer2points = response;
+        });
+    }
+
+    countPoints() {
         var game = this;
 
         var converted1 = this.getBoardString(this.boardP1);
@@ -202,34 +216,42 @@ class MyGame extends CGFobject {
             this.addAnimsToReplay(this.scene.deltaTime);
         }
 
-        if ((this.player1points == -1) & (this.player2points == -1)) {
+        if ((this.finalplayer1points == -1) & (this.finalplayer2points == -1)) {
             if (this.lastPlays.length == this.planets.length) {
                 this.info = "The game has ended!\nChecking winner...";
                 this.scene.setPickEnabled(false);
                 this.checkWinner();
+                document.getElementById("points_1").innerText = null;
+                document.getElementById("points_2").innerText = null;
+                this.gameInCourse = false;
             }
         }
-        else if ((this.player1points != -1) & (this.player2points != -1)) {
+        else if ((this.finalplayer1points != -1) & (this.finalplayer2points != -1)) {
 
             var winner;
 
-            if (this.player2points > this.player1points)
+            if (this.finalplayer2points > this.finalplayer1points) {
                 winner = "The winner is Player 2!";
-            else if (this.player2points < this.player1points)
+            }
+            else if (this.finalplayer2points < this.finalplayer1points) {
                 winner = "The winner is Player 1!";
+            }
             else
                 winner = "It's a tie!";
 
-            this.info = "Player 1 points: " + this.player1points + "\nPlayer 2 points: " + this.player2points + "\n" + winner;
+            this.info = "Player 1 points: " + this.finalplayer1points + "\nPlayer 2 points: " + this.finalplayer2points + "\n" + winner;
 
         }
 
         if (this.gameInCourse) {
             this.time = (this.timeout + this.lastTimePlayed / 1000) - (this.scene.deltaTime / 1000);
-            document.getElementById("info").innerText = this.info + "\n" + this.time.toFixed(0);
+            document.getElementById("info").innerText = this.info + "\nYou have " + this.time.toFixed(0) + " seconds to play ";
+            document.getElementById("points_1").innerText = this.player1points;
+            document.getElementById("points_2").innerText = this.player2points;
         }
         else
             document.getElementById("info").innerText = this.info;
+
 
         if ((this.gameInCourse) & ((this.timeout * 1000 + this.lastTimePlayed) < this.scene.deltaTime)) {
             if (this.player1turn) {
@@ -352,7 +374,7 @@ class MyGame extends CGFobject {
             var response = data.target.response;
 
             // Se peça mal posicionada
-            if (response == 1) {
+            if (response == -1) {
                 game.piece.animation = null;
                 game.piece.final = null;
                 game.piece.played = false;
@@ -414,6 +436,8 @@ class MyGame extends CGFobject {
                 game.tile = null;
                 game.piece = null;
                 game.lastTimePlayed = game.scene.deltaTime;
+
+                game.countPoints();
             }
         });
     }

@@ -107,8 +107,8 @@ print_header_line(_).
 
 parse_input(testMove(X, Y, Board), Status):-
  (valid_move(coord(X, Y), Board) ->
-	Status is 0;
-	Status is 1).
+	value(Board, Status);
+	Status is -1).
 
 parse_input(points(Board), Status):-
  	value(Board, Status).

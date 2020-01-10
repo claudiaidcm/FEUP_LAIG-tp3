@@ -11,18 +11,18 @@ class CameraRotation {
         this.currCamera = currCamera;
         this.nextCamera = nextCamera;
 
-        this.rotTime = (this.scene.deltaTime/1000) + 1;
+        this.rotTime = this.scene.deltaTime + 1000;
     }
 
     apply() {
 
-        if (this.rotTime < (this.scene.deltaTime/1000)) {
+        if (this.rotTime < this.scene.deltaTime) {
             this.scene.camera = this.nextCamera;
             this.scene.interface.setActiveCamera(this.camera);
             return;
         }
 
-        var percentageTime = (this.rotTime - (this.scene.deltaTime/1000)) / this.rotTime;
+        var percentageTime = (this.rotTime - this.scene.deltaTime) / this.rotTime;
 
         var near = this.form(this.nextCamera.near, this.currCamera.near, percentageTime);
         var far = this.form(this.nextCamera.far, this.currCamera.far, percentageTime);
