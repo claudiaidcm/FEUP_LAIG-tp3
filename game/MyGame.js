@@ -85,7 +85,7 @@ class MyGame extends CGFobject {
     // Create the planets that are going to be pieces of the game
     createPlanets() {
         this.planets = [];
-        for (var planet = 0; planet < 5; planet++) {
+        for (var planet = 0; planet < 7; planet++) {
             var id = planet + 1486;
             var texture = this.textures[planet];
             var initial = vec3.fromValues(-2, 0.1, (planet % 7) - 3);
@@ -123,6 +123,8 @@ class MyGame extends CGFobject {
                 lastPlay.animation = null;
                 lastPlay.final = null;
                 lastPlay.played = false;
+
+                this.countPoints();
 
                 this.lastTimePlayed = this.scene.deltaTime;
             }
